@@ -1,5 +1,6 @@
 #!/bin/dash
-pip install -e git+https://github.com/eol-uchile/uchileedxlogin@8cb702fe18c26b29c0667c660c24ee75a03c9ec9#egg=uchileedxlogin
+pip install zeep==3.4.0
+pip install -e git+https://github.com/eol-virtuallabx/eol_custom_reg_form@bcc9233281392e916c789a6e244c933b928bf42b#egg=eol_custom_reg_form
 pip install -e /openedx/requirements/eol_completion
 
 cd /openedx/requirements/eol_completion/eol_completion

@@ -78,12 +78,12 @@ def task_get_tick(
         data = EolCompletionData().get_context_big_course(course_key)
     else:
         display_name_course = task_input["display_name"]
-        # try to get rut from edxloginuser model if this dont exists only get id, username and email
+        # try to get rut from extrainfo model if this dont exists only get id, username and email
         try:
             enrolled_students = User.objects.filter(
                 courseenrollment__course_id=course_key,
                 courseenrollment__is_active=1
-            ).order_by('username').values('id', 'username', 'email', 'edxloginuser__run')
+            ).order_by('username').values('id', 'username', 'email', 'extrainfo__labx_rut')
         except FieldError:
             enrolled_students = User.objects.filter(
                 courseenrollment__course_id=course_key,
@@ -382,11 +382,11 @@ class EolCompletionData(View, Content):
                     courseenrollment__is_active=1
                 ).annotate(
                     last_completed=Max('blockcompletion__modified')
-                    ).order_by('username').values('username', 'email', 'edxloginuser__run', 'last_login', 'last_completed')
+                    ).order_by('username').values('username', 'email', 'extrainfo__labx_rut', 'last_login', 'last_completed')
 
             context = [
                 [x['username'], 
-                x['edxloginuser__run'] if x['edxloginuser__run'] else '', 
+                x['extrainfo__labx_rut'] if x['extrainfo__labx_rut'] else '', 
                 x['email'], 
                 x['last_completed'].strftime("%d/%m/%Y, %H:%M:%S") if x['last_completed'] else '', 
                 x['last_login'].strftime("%d/%m/%Y, %H:%M:%S") if x['last_login'] else ''] for x in enrolled_students
@@ -423,7 +423,7 @@ class EolCompletionData(View, Content):
         students_id = [x['id'] for x in enrolled_students]
         students_username = [x['username'] for x in enrolled_students]
         students_email = [x['email'] for x in enrolled_students]
-        students_rut = [x['edxloginuser__run'] if 'edxloginuser__run' in x else '' for x in enrolled_students]
+        students_rut = [x['extrainfo__labx_rut'] if 'extrainfo__labx_rut' in x else '' for x in enrolled_students]
         i = 0
         certificate = self.get_certificate(students_id, course_key)
         blocks = self.get_block(students_id, course_key)

@@ -247,14 +247,14 @@ class TestEolCompletionView(UrlResetMixin, ModuleStoreTestCase):
 
     def test_render_data_with_rut(self):
         """
-            Test get data normal process with edxloginuser
+            Test get data normal process with eol_custom_reg_form
         """
         try:
             from unittest.case import SkipTest
-            from uchileedxlogin.models import EdxLoginUser
+            from custom_reg_form.models import ExtraInfo
         except ImportError:
-            self.skipTest("import error uchileedxlogin")
-        EdxLoginUser.objects.create(user=self.student, run='000000001K')
+            self.skipTest("import error eol_custom_reg_form")
+        ExtraInfo.objects.create(user=self.student, labx_rut='000000001K')
         url = '{}?is_bigcourse=0'.format(reverse(
             'completion_data_view', kwargs={
                 'course_id': self.course.id}))
@@ -271,14 +271,14 @@ class TestEolCompletionView(UrlResetMixin, ModuleStoreTestCase):
 
     def test_render_data_with_rut_big_course(self):
         """
-            Test get data normal process with edxloginuser when is big course
+            Test get data normal process with eol_custom_reg_form when is big course
         """
         try:
             from unittest.case import SkipTest
-            from uchileedxlogin.models import EdxLoginUser
+            from custom_reg_form.models import ExtraInfo
         except ImportError:
-            self.skipTest("import error uchileedxlogin")
-        edxlogin = EdxLoginUser.objects.create(user=self.student, run='000000001K')
+            self.skipTest("import error eol_custom_reg_form")
+        edxlogin = ExtraInfo.objects.create(user=self.student, labx_rut='000000001K')
         context_key = LearningContextKey.from_string(str(self.course.id))
         for item in self.items:
             usage_key = item.scope_ids.usage_id
@@ -300,7 +300,7 @@ class TestEolCompletionView(UrlResetMixin, ModuleStoreTestCase):
         data = json.loads(self.response.content.decode())
         self.assertEqual(len(data['data']), 14)
         self.assertEqual(data['data'][-1][0], self.student.username)
-        self.assertEqual(data['data'][-1][1], edxlogin.run)
+        self.assertEqual(data['data'][-1][1], edxlogin.labx_rut)
         self.assertEqual(data['data'][-1][2], self.student.email)
         self.assertEqual(data['data'][-1][3], completion.modified.strftime("%d/%m/%Y, %H:%M:%S"))
 
