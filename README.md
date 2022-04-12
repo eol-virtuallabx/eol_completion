@@ -1,4 +1,5 @@
 # EOL Completion
+![https://github.com/eol-virtuallabx/eol_completion/actions](https://github.com/eol-virtuallabx/eol_completion/workflows/Python%20application/badge.svg)
 
 Adding student units tracking.
 
